@@ -166,6 +166,9 @@ public class GasFeature extends Feature {
                 event.setCancelled(true);
                 event.getBlock().setMetadata("gas", new FixedMetadataValue(WorldFeatures.getPlugin(), true));
             }
+            if(event.getBlock().hasMetadata("gas")) {
+                event.getBlock().removeMetadata("gas", WorldFeatures.getPlugin());
+            }
         }
     }
 
