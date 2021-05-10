@@ -7,6 +7,7 @@ import de.hglabor.worldfeatures.features.armor.JetpackFeature;
 import de.hglabor.worldfeatures.features.recipe.RottenFleshRecipeFeature;
 import de.hglabor.worldfeatures.features.travel.DolphinRidingFeature;
 import de.hglabor.worldfeatures.features.travel.ParachuteFeature;
+import de.hglabor.worldfeatures.features.travel.TeleporterFeature;
 import de.hglabor.worldfeatures.features.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -50,6 +51,8 @@ public final class WorldFeatures extends JavaPlugin {
         registerFeature(new GasFeature());
         registerFeature(new IllegalItemsFeature());
         registerFeature(new SpawnProtFeature());
+        registerFeature(new ContributorFeature());
+        registerFeature(new TeleporterFeature());
         for (Feature feature : getFeatures()) {
             feature.onServerStart(plugin);
         }
