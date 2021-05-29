@@ -1,6 +1,5 @@
 package de.hglabor.worldfeatures.features.armor;
 
-import de.hglabor.utils.noriskutils.pvpbots.PvPBot;
 import de.hglabor.worldfeatures.WorldFeatures;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.utils.ItemBuilder;
