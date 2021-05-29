@@ -3,7 +3,7 @@ package de.hglabor.worldfeatures.features.travel;
 import de.hglabor.worldfeatures.WorldFeatures;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.utils.ItemBuilder;
-import de.hglabor.worldfeatures.utils.gui.InventoryBuilder;
+import de.hglabor.worldfeatures.utils.gui.inventory.InventoryBuilder;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;

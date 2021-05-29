@@ -1,4 +1,4 @@
-package de.hglabor.worldfeatures.utils.gui;
+package de.hglabor.worldfeatures.utils.gui.inventory;
 
 import de.hglabor.worldfeatures.WorldFeatures;
 import org.bukkit.Bukkit;
