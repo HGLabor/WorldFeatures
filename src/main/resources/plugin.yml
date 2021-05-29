@@ -9,3 +9,6 @@ commands:
     permission: hglabor.managefeatures
   wiki:
   color:
+  rules:
+    aliases:
+      - report

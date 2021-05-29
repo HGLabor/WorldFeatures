@@ -1,6 +1,7 @@
 package de.hglabor.worldfeatures;
 
 import de.hglabor.worldfeatures.commands.FeatureCommand;
+import de.hglabor.worldfeatures.commands.RulesCommand;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.features.armor.GasFeature;
 import de.hglabor.worldfeatures.features.armor.JetpackFeature;
@@ -10,6 +11,10 @@ import de.hglabor.worldfeatures.features.travel.ParachuteFeature;
 import de.hglabor.worldfeatures.features.travel.TeleporterFeature;
 import de.hglabor.worldfeatures.features.util.*;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,11 +51,12 @@ public final class WorldFeatures extends JavaPlugin {
         registerFeature(new TemperaturesFeature());
         registerFeature(new RottenFleshRecipeFeature());
         registerFeature(new BroadcastFeature());
+        registerFeature(new RulesCommand());
         registerFeature(new ChatFeature());
         registerFeature(new LootDropFeature());
         registerFeature(new GasFeature());
         registerFeature(new IllegalItemsFeature());
-        registerFeature(new SpawnProtFeature());
+        //registerFeature(new SpawnProtFeature());
         registerFeature(new ContributorFeature());
         registerFeature(new TeleporterFeature());
         for (Feature feature : getFeatures()) {
@@ -58,5 +64,7 @@ public final class WorldFeatures extends JavaPlugin {
         }
         getCommand("feature").setExecutor(new FeatureCommand());
         getCommand("feature").setTabCompleter(new FeatureCommand());
+        getCommand("rules").setExecutor(new RulesCommand());
+
     }
 }
