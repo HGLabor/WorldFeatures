@@ -3,7 +3,17 @@ package de.hglabor.worldfeatures.utils.gui.button;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public record GuiButtonClickAction(Player player, GuiButton button, InventoryClickEvent bukkitEvent) {
+public class GuiButtonClickAction {
+
+    private Player player;
+    private GuiButton button;
+    private InventoryClickEvent bukkitEvent;
+
+    public GuiButtonClickAction(Player player, GuiButton button, InventoryClickEvent bukkitEvent) {
+        this.player = player;
+        this.button = button;
+        this.bukkitEvent = bukkitEvent;
+    }
 
     public InventoryClickEvent getBukkitEvent() {
         return bukkitEvent;
