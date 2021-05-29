@@ -2,16 +2,17 @@ package de.hglabor.worldfeatures;
 
 import de.hglabor.worldfeatures.commands.bukkit.FeatureCommand;
 import de.hglabor.worldfeatures.commands.bukkit.RulesCommand;
+import de.hglabor.worldfeatures.commands.implementation.SpawnEntityCommand;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.features.armor.GasFeature;
 import de.hglabor.worldfeatures.features.armor.JetpackFeature;
+import de.hglabor.worldfeatures.features.entity.implementation.RaptorEntityFeature;
 import de.hglabor.worldfeatures.features.recipe.RottenFleshRecipeFeature;
 import de.hglabor.worldfeatures.features.travel.DolphinRidingFeature;
 import de.hglabor.worldfeatures.features.travel.ParachuteFeature;
 import de.hglabor.worldfeatures.features.travel.TeleporterFeature;
 import de.hglabor.worldfeatures.features.util.*;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -55,12 +56,13 @@ public final class WorldFeatures extends JavaPlugin {
         //registerFeature(new SpawnProtFeature());
         registerFeature(new ContributorFeature());
         registerFeature(new TeleporterFeature());
+        registerFeature(new RaptorEntityFeature());
         for (Feature feature : getFeatures()) {
             feature.onServerStart(plugin);
         }
         getCommand("feature").setExecutor(new FeatureCommand());
         getCommand("feature").setTabCompleter(new FeatureCommand());
         getCommand("rules").setExecutor(new RulesCommand());
-
+        new SpawnEntityCommand();
     }
 }
