@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class BroadcastFeature extends Feature {
 
-    private static String[] tips = {"You can ride §bdolphins §7with saddles!", "Change your fontcolor with §b/color <color>§7.", "If your message starts with §b';'§7, you can copy it!", "You can ping users in the chat just by typing their name.", "Questions? §bhttps://discord.gg/CnSkATfpbA"};
+    private static String[] tips = {"You can ride §bdolphins §7with saddles!", "Change your fontcolor with §b/color <color>§7.", "If your message starts with §b';'§7, you can copy it!", "You can ping users in the chat just by typing their name.", "Questions? §bhttps://discord.gg/CnSkATfpbA", "This server is §banarchy §7so feel free to do what you want", "Need help with extra features? §bhttps://github.com/HGLabor/survival-tutorial"};
 
     public BroadcastFeature() {
         super("Broadcast");
