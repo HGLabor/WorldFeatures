@@ -39,6 +39,8 @@ public class ChatFeature extends Feature implements CommandExecutor, TabComplete
     public void onChat(PlayerChatEvent event) {
         Player player = event.getPlayer();
         if(!isEnabled) {
+            player.sendMessage("§8§l> §cThe chat is currently disabled.");
+            event.setCancelled(true);
             return;
         }
         if(event.getMessage().equalsIgnoreCase("!discord")) {
