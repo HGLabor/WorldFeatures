@@ -1,4 +1,4 @@
-package de.hglabor.worldfeatures.commands;
+package de.hglabor.worldfeatures.commands.bukkit;
 
 import de.hglabor.worldfeatures.features.Feature;
 import org.bukkit.command.Command;

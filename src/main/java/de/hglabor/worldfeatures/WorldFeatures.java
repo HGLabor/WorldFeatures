@@ -1,7 +1,7 @@
 package de.hglabor.worldfeatures;
 
-import de.hglabor.worldfeatures.commands.FeatureCommand;
-import de.hglabor.worldfeatures.commands.RulesCommand;
+import de.hglabor.worldfeatures.commands.bukkit.FeatureCommand;
+import de.hglabor.worldfeatures.commands.bukkit.RulesCommand;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.features.armor.GasFeature;
 import de.hglabor.worldfeatures.features.armor.JetpackFeature;
@@ -11,10 +11,6 @@ import de.hglabor.worldfeatures.features.travel.ParachuteFeature;
 import de.hglabor.worldfeatures.features.travel.TeleporterFeature;
 import de.hglabor.worldfeatures.features.util.*;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,7 +20,7 @@ import java.util.Collection;
 public final class WorldFeatures extends JavaPlugin {
 
     private static Collection<Feature> features = new ArrayList<>();
-    private static Plugin plugin;
+    private static WorldFeatures plugin;
 
     public static Collection<Feature> getFeatures() {
         return features;
@@ -36,7 +32,7 @@ public final class WorldFeatures extends JavaPlugin {
         feature.onEnable();
     }
 
-    public static Plugin getPlugin() {
+    public static WorldFeatures getPlugin() {
         return plugin;
     }
 
