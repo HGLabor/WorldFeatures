@@ -12,3 +12,4 @@ commands:
   rules:
     aliases:
       - report
+  spawnentity:
