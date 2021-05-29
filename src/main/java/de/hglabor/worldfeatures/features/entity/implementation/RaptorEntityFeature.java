@@ -54,6 +54,9 @@ public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAni
             animationBuilder.withDeathAnimation(it -> it.getWorld().playSound(it.getLocation(), Sound.ENTITY_PHANTOM_DEATH, 1, 10));
             animationBuilder.withWalkingAnimation(it -> {
                 if(stolenEntity != null) {
+                    if(entity.getTicksLived() > 180*20) {
+                        stolenEntity = null;
+                    }
                     stolenEntity.teleport(entity.getLocation().clone().subtract(0,0.7,0));
                 }
             });
