@@ -2,6 +2,7 @@ package de.hglabor.worldfeatures.features.util;
 
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.utils.LuckPermsUtils;
+import net.axay.kspigot.chat.KColors;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -18,6 +19,8 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,14 +28,16 @@ import java.util.UUID;
 
 public class ChatFeature extends Feature implements CommandExecutor, TabCompleter {
 
+    private final List<String> blacklist = List.of("report", "hacker", "kann ein admin", "bann");
+
     public ChatFeature() {
         super("Chat");
     }
 
-    private static HashMap<UUID, ChatColor> colors = new HashMap<>();
+    private static HashMap<UUID, net.md_5.bungee.api.ChatColor> colors = new HashMap<>();
 
-    private static ChatColor getColor(Player player) {
-        return colors.getOrDefault(player.getUniqueId(), ChatColor.WHITE);
+    private static net.md_5.bungee.api.ChatColor getColor(Player player) {
+        return colors.getOrDefault(player.getUniqueId(), net.md_5.bungee.api.ChatColor.WHITE);
     }
 
     @EventHandler
@@ -42,6 +47,13 @@ public class ChatFeature extends Feature implements CommandExecutor, TabComplete
             player.sendMessage("§8§l> §cThe chat is currently disabled.");
             event.setCancelled(true);
             return;
+        }
+        for (String word : blacklist) {
+            if(event.getMessage().toLowerCase().contains(word.toLowerCase())) {
+                player.sendMessage("§8§l> §fThe word §e\"" + word + "\"§f is blacklisted due to the §6/rules §fon this server.");
+                event.setCancelled(true);
+                return;
+            }
         }
         if(event.getMessage().equalsIgnoreCase("!discord")) {
             event.setCancelled(true);
@@ -56,7 +68,7 @@ public class ChatFeature extends Feature implements CommandExecutor, TabComplete
             if (player.isOp()) {
                 fmsg = fmsg.replace("&", "\u00A7");
                 if(fmsg.contains("@everyone")) {
-                    fmsg = fmsg.replace("@everyone", ChatColor.DARK_RED + "@everyone");
+                    fmsg = fmsg.replace("@everyone", ChatColor.DARK_RED + "@everyone" + getColor(player));
                     Bukkit.broadcastMessage(color + player.getDisplayName() + ChatColor.GRAY + " \u00bb " + getColor(player) + fmsg);
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         p.playSound(p.getLocation(), Sound.BLOCK_BELL_USE, 0.3f, 1);
@@ -67,16 +79,14 @@ public class ChatFeature extends Feature implements CommandExecutor, TabComplete
             boolean isCopyAble = fmsg.startsWith(";");
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (fmsg.contains(p.getName())) {
-                    fmsg = fmsg.replaceAll(p.getName(), ChatColor.GOLD + "" + ChatColor.ITALIC + "@" + p.getName() + getColor(player));
-                    if(!player.getScoreboardTags().contains("hidden")) {
-                        p.playSound(p.getLocation(), Sound.BLOCK_BELL_USE, 0.3f, 1);
-                    }
+                    fmsg = fmsg.replaceAll(p.getName(), net.md_5.bungee.api.ChatColor.of(new Color(13881511)) + "" + ChatColor.ITALIC + "@" + p.getName() + getColor(player));
                     TextComponent component = new TextComponent(TextComponent.fromLegacyText(color + player.getDisplayName() + ChatColor.GRAY + " \u00bb " + getColor(player) + fmsg));
                     component.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.SUGGEST_COMMAND, player.getName() + " "));
                     component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GRAY + "Reply to " + ChatColor.GOLD + player.getName())));
                     isPing = true;
                     if(!player.hasPermission("group.muted")) {
                         for (Player pl : Bukkit.getOnlinePlayers()) {
+                            pl.playSound(pl.getLocation(), Sound.BLOCK_BELL_USE, 0.3f, 1);
                             pl.spigot().sendMessage(component);
                         }
                     } else {
@@ -113,10 +123,16 @@ public class ChatFeature extends Feature implements CommandExecutor, TabComplete
         Player player = (Player) sender;
         if(args.length == 1) {
             try {
-                ChatColor color = ChatColor.valueOf(args[0].toUpperCase());
+                net.md_5.bungee.api.ChatColor color = net.md_5.bungee.api.ChatColor.WHITE;
+                for (Field field : KColors.class.getFields()) {
+                    if(field.getName().equalsIgnoreCase(args[0])) {
+                        color = (net.md_5.bungee.api.ChatColor) field.get(KColors.class);
+                        break;
+                    }
+                }
                 colors.remove(player.getUniqueId());
                 colors.put(player.getUniqueId(), color);
-                sender.sendMessage("§8§l> §7Color changed to " + color + color.name() + "§7.");
+                sender.sendMessage("§8§l> §7Color changed to " + color + args[0].toUpperCase() + "§7.");
             } catch (Exception ex) {
                 sender.sendMessage("§8§l> §cInvalid color.");
             }
@@ -129,8 +145,8 @@ public class ChatFeature extends Feature implements CommandExecutor, TabComplete
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         ArrayList<String> arrayList = new ArrayList<String>();
-        for (ChatColor color : ChatColor.values()) {
-            arrayList.add(color.name().toLowerCase());
+        for (Field field : KColors.class.getFields()) {
+            arrayList.add(field.getName());
         }
         return arrayList;
     }
