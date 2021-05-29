@@ -7,7 +7,6 @@ import de.hglabor.worldfeatures.utils.Identifier;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Cow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
@@ -26,7 +25,7 @@ public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAni
         return new RaptorEntityFeature();
     }
 
-    private Cow stolenEntity = null;
+    private ArmorStand stolenEntity = null;
 
     @Override
     public void prepareSpawn(Object obj) {
@@ -58,8 +57,8 @@ public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAni
                     stolenEntity.teleport(entity.getLocation().clone().subtract(0,0.7,0));
                 }
             });
-            animationBuilder.shouldAttackWhen(it -> stolenEntity == null || stolenEntity.isDead() && it != stolenEntity);
-            if(targetPossibility instanceof Cow) {
+            animationBuilder.shouldAttackWhen(it -> stolenEntity == null || stolenEntity.isDead() && it != stolenEntity && it.getScoreboardTags().contains("isBody:true"));
+            if(targetPossibility instanceof ArmorStand) {
                 if(!targetPossibility.isDead()) {
                     if(targetPossibility != stolenEntity && stolenEntity == null || stolenEntity.isDead()) {
                         animationBuilder.withPathfinderGoal((LivingEntity) targetPossibility, 0.1);
@@ -67,7 +66,7 @@ public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAni
                         continue;
                     }
                     animationBuilder.withAttackAnimation(it -> {
-                        stolenEntity = (Cow) it;
+                        stolenEntity = (ArmorStand) it;
                         it.getWorld().playSound(it.getLocation(), Sound.ENTITY_PHANTOM_BITE, 1, 10);
                         int randomY = new Random().nextInt(200);
                         animationBuilder.withPathfinderGoal(entity.getLocation().clone().subtract(0,entity.getLocation().getY(),0).add(15, randomY > 80 ? randomY : 87,15));

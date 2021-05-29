@@ -13,6 +13,7 @@ import de.hglabor.worldfeatures.features.travel.DolphinRidingFeature;
 import de.hglabor.worldfeatures.features.travel.ParachuteFeature;
 import de.hglabor.worldfeatures.features.travel.TeleporterFeature;
 import de.hglabor.worldfeatures.features.util.*;
+import de.hglabor.worldfeatures.kotlin.features.LootableBodiesFeature;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -57,6 +58,7 @@ public final class WorldFeatures extends JavaPlugin {
         //registerFeature(new SpawnProtFeature());
         registerFeature(new ContributorFeature());
         registerFeature(new TeleporterFeature());
+        registerFeature(new LootableBodiesFeature());
         registerFeature(new NaturalLaborEntitySpawningFeature());
         registerFeature(new RaptorEntityFeature());
         for (Feature feature : getFeatures()) {
