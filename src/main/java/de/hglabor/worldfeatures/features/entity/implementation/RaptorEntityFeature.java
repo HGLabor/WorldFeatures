@@ -77,12 +77,12 @@ public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAni
                         stolenEntity = (ArmorStand) it;
                         it.getWorld().playSound(it.getLocation(), Sound.ENTITY_PHANTOM_BITE, 1, 10);
                         int randomY = new Random().nextInt(200);
-                        animationBuilder.withPathfinderGoal(entity.getLocation().clone().subtract(0,entity.getLocation().getY(),0).add(15, randomY > 80 ? randomY : 87,15));
+                        animationBuilder.withPathfinderGoal(entity.getLocation().clone().subtract(0,entity.getLocation().getY(),0).add(new Random().nextBoolean() ? 15 : -15, randomY > 80 ? randomY : 87,new Random().nextBoolean() ? 15 : -15));
                     });
                 }
             } else {
                 int randomY = new Random().nextInt(200);
-                animationBuilder.withPathfinderGoal(entity.getLocation().clone().subtract(0,entity.getLocation().getY(),0).add(15, randomY > 80 ? randomY : 87,15));
+                animationBuilder.withPathfinderGoal(entity.getLocation().clone().subtract(0,entity.getLocation().getY(),0).add(new Random().nextBoolean() ? 15 : -15, randomY > 80 ? randomY : 87,new Random().nextBoolean() ? 15 : -15));
             }
             animationBuilder.apply();
             break;
