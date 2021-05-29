@@ -18,7 +18,7 @@ import java.util.Random;
 public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAnimateable<ArmorStand> {
 
     public RaptorEntityFeature() {
-        super(new Identifier("raptor"), 15);
+        super(new Identifier("raptor"), 10, it -> it.getWorld().getName().equalsIgnoreCase("world"));
     }
 
     @Override
@@ -27,6 +27,11 @@ public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAni
     }
 
     private Cow stolenEntity = null;
+
+    @Override
+    public void prepareSpawn(Object obj) {
+        withYOffset(15.8);
+    }
 
     @Override
     public void afterSpawn(ArmorStand entity) {
@@ -64,12 +69,12 @@ public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAni
                     animationBuilder.withAttackAnimation(it -> {
                         stolenEntity = (Cow) it;
                         it.getWorld().playSound(it.getLocation(), Sound.ENTITY_PHANTOM_BITE, 1, 10);
-                        int randomY = new Random().nextInt(270);
+                        int randomY = new Random().nextInt(200);
                         animationBuilder.withPathfinderGoal(entity.getLocation().clone().subtract(0,entity.getLocation().getY(),0).add(15, randomY > 80 ? randomY : 87,15));
                     });
                 }
             } else {
-                int randomY = new Random().nextInt(270);
+                int randomY = new Random().nextInt(200);
                 animationBuilder.withPathfinderGoal(entity.getLocation().clone().subtract(0,entity.getLocation().getY(),0).add(15, randomY > 80 ? randomY : 87,15));
             }
             animationBuilder.apply();
