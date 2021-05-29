@@ -78,6 +78,7 @@ public final class InventoryBuilder {
                                 if(event.getCurrentItem().isSimilar(items.get(i))) {
                                     event.setCancelled(true);
                                     consumer.accept(player);
+                                    event.getHandlers().unregister(this);
                                 }
                             }
                         }
