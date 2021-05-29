@@ -57,7 +57,15 @@ public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAni
                     stolenEntity.teleport(entity.getLocation().clone().subtract(0,0.7,0));
                 }
             });
-            animationBuilder.shouldAttackWhen(it -> stolenEntity == null || stolenEntity.isDead() && it != stolenEntity && it.getScoreboardTags().contains("isBody:true"));
+            animationBuilder.shouldAttackWhen(it -> {
+                if(stolenEntity == it) {
+                    return false;
+                }
+                if(stolenEntity == null || stolenEntity.isDead()) {
+                    return it.getScoreboardTags().contains("isBody:true");
+                }
+                return false;
+            });
             if(targetPossibility instanceof ArmorStand) {
                 if(!targetPossibility.isDead()) {
                     if(targetPossibility != stolenEntity && stolenEntity == null || stolenEntity.isDead()) {
