@@ -31,11 +31,9 @@ public class LootDropFeature extends Feature {
                 if(!isEnabled) {
                     cancel();
                 } else {
-                    if(new Random().nextInt(16) < 4) {
-                        lootDropLocation.setX(new Random().nextInt(100000)-new Random().nextInt(100000));
-                        lootDropLocation.setZ(new Random().nextInt(100000)-new Random().nextInt(100000));
-                        spawnLootDrop();
-                    }
+                    lootDropLocation.setX(new Random().nextInt(100000)-new Random().nextInt(100000));
+                    lootDropLocation.setZ(new Random().nextInt(100000)-new Random().nextInt(100000));
+                    spawnLootDrop();
                 }
             }
         }.runTaskTimer(WorldFeatures.getPlugin(), 10*20, 7200*20);
