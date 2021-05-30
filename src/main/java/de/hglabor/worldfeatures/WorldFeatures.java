@@ -7,6 +7,7 @@ import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.features.armor.GasFeature;
 import de.hglabor.worldfeatures.features.armor.JetpackFeature;
 import de.hglabor.worldfeatures.features.entity.NaturalLaborEntitySpawningFeature;
+import de.hglabor.worldfeatures.features.entity.implementation.BirdEntityFeature;
 import de.hglabor.worldfeatures.features.entity.implementation.RaptorEntityFeature;
 import de.hglabor.worldfeatures.features.recipe.RottenFleshRecipeFeature;
 import de.hglabor.worldfeatures.features.travel.DolphinRidingFeature;
@@ -61,6 +62,7 @@ public final class WorldFeatures extends JavaPlugin {
         registerFeature(new LootableBodiesFeature());
         registerFeature(new NaturalLaborEntitySpawningFeature());
         registerFeature(new RaptorEntityFeature());
+        registerFeature(new BirdEntityFeature());
         for (Feature feature : getFeatures()) {
             feature.onServerStart(plugin);
         }
