@@ -10,6 +10,8 @@ import de.hglabor.worldfeatures.features.entity.NaturalLaborEntitySpawningFeatur
 import de.hglabor.worldfeatures.features.entity.implementation.BirdEntityFeature;
 import de.hglabor.worldfeatures.features.entity.implementation.RaptorEntityFeature;
 import de.hglabor.worldfeatures.features.recipe.RottenFleshRecipeFeature;
+import de.hglabor.worldfeatures.features.structures.NaturalStructureSpawningFeature;
+import de.hglabor.worldfeatures.features.structures.implementation.RougelikeDungeonFeature;
 import de.hglabor.worldfeatures.features.travel.DolphinRidingFeature;
 import de.hglabor.worldfeatures.features.travel.ParachuteFeature;
 import de.hglabor.worldfeatures.features.travel.TeleporterFeature;
@@ -43,6 +45,9 @@ public final class WorldFeatures extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        if(!getDataFolder().exists()) {
+            getDataFolder().mkdirs();
+        }
         registerFeature(new DolphinRidingFeature());
         registerFeature(new ParachuteFeature());
         registerFeature(new JetpackFeature());
@@ -60,7 +65,9 @@ public final class WorldFeatures extends JavaPlugin {
         registerFeature(new ContributorFeature());
         registerFeature(new TeleporterFeature());
         registerFeature(new LootableBodiesFeature());
+        registerFeature(new NaturalStructureSpawningFeature());
         registerFeature(new NaturalLaborEntitySpawningFeature());
+        registerFeature(new RougelikeDungeonFeature());
         registerFeature(new RaptorEntityFeature());
         registerFeature(new BirdEntityFeature());
         for (Feature feature : getFeatures()) {

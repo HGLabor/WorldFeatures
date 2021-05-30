@@ -4,6 +4,7 @@ import de.hglabor.worldfeatures.features.entity.LaborEntity;
 import de.hglabor.worldfeatures.features.entity.animation.AnimationBuilder;
 import de.hglabor.worldfeatures.features.entity.animation.IAnimateable;
 import de.hglabor.worldfeatures.utils.Identifier;
+import de.hglabor.worldfeatures.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Random;
 
@@ -36,9 +38,7 @@ public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAni
     public void afterSpawn(ArmorStand entity) {
         entity.setVisible(false);
         entity.setArms(true);
-        entity.getEquipment().setItemInMainHand(new ItemStack(Material.BONE));
-        entity.getEquipment().setItemInOffHand(new ItemStack(Material.BONE));
-        entity.getEquipment().setHelmet(new ItemStack(Material.BROWN_WOOL));
+        entity.getEquipment().setHelmet(new ItemBuilder(Material.FEATHER).withCustomModelData(2).build());
         for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
             entity.addEquipmentLock(equipmentSlot, ArmorStand.LockType.ADDING_OR_CHANGING);
             entity.addEquipmentLock(equipmentSlot, ArmorStand.LockType.REMOVING_OR_CHANGING);
@@ -53,12 +53,17 @@ public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAni
             animationBuilder.withRemoveOnBlock(false);
             animationBuilder.withDeathAnimation(it -> it.getWorld().playSound(it.getLocation(), Sound.ENTITY_PHANTOM_DEATH, 1, 10));
             animationBuilder.withWalkingAnimation(it -> {
+                ItemStack itemStack = entity.getEquipment().getHelmet();
+                ItemMeta itemMeta = itemStack.getItemMeta();
                 if(stolenEntity != null) {
+                    itemMeta.setCustomModelData(3);
                     if(entity.getTicksLived() > 180*20) {
                         stolenEntity = null;
                     }
                     stolenEntity.teleport(entity.getLocation().clone().subtract(0,0.7,0));
                 }
+                itemMeta.setCustomModelData(2);
+                itemStack.setItemMeta(itemMeta);
             });
             animationBuilder.shouldAttackWhen(it -> {
                 if(stolenEntity == it) {

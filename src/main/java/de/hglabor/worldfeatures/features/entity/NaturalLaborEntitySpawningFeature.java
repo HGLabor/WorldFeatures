@@ -37,7 +37,7 @@ public class NaturalLaborEntitySpawningFeature extends Feature {
                         }
                         Location location = player.getLocation().clone();
                         location.add(new Random().nextInt(30)-new Random().nextInt(30), laborEntity.getySpawnOffset(), new Random().nextInt(30)-new Random().nextInt(30));
-                        if(laborEntity.shouldSpawnHere().test(location)) {
+                        if(laborEntity.shouldSpawnHere().test(location) && location.getBlock().isEmpty()) {
                             LaborEntity<?> finalEntity = laborEntity.getNewInstance();
                             finalEntity.prepareSpawn(location);
                             finalEntity.spawn(finalEntity.getOriginBukkitEntityClass(), location, 3);
