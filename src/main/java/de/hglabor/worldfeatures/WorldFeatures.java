@@ -9,6 +9,7 @@ import de.hglabor.worldfeatures.features.armor.JetpackFeature;
 import de.hglabor.worldfeatures.features.entity.NaturalLaborEntitySpawningFeature;
 import de.hglabor.worldfeatures.features.entity.implementation.BirdEntityFeature;
 import de.hglabor.worldfeatures.features.entity.implementation.RaptorEntityFeature;
+import de.hglabor.worldfeatures.features.protocol.ProtocolFeature;
 import de.hglabor.worldfeatures.features.recipe.RottenFleshRecipeFeature;
 import de.hglabor.worldfeatures.features.structures.NaturalStructureSpawningFeature;
 import de.hglabor.worldfeatures.features.structures.implementation.RougelikeDungeonFeature;
@@ -17,13 +18,13 @@ import de.hglabor.worldfeatures.features.travel.ParachuteFeature;
 import de.hglabor.worldfeatures.features.travel.TeleporterFeature;
 import de.hglabor.worldfeatures.features.util.*;
 import de.hglabor.worldfeatures.kotlin.features.LootableBodiesFeature;
+import net.axay.kspigot.main.KSpigot;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public final class WorldFeatures extends JavaPlugin {
+public final class WorldFeatures extends KSpigot {
 
     private static Collection<Feature> features = new ArrayList<>();
     private static WorldFeatures plugin;
@@ -43,7 +44,7 @@ public final class WorldFeatures extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
+    public void startup() {
         plugin = this;
         if(!getDataFolder().exists()) {
             getDataFolder().mkdirs();
@@ -65,6 +66,7 @@ public final class WorldFeatures extends JavaPlugin {
         registerFeature(new ContributorFeature());
         registerFeature(new TeleporterFeature());
         registerFeature(new LootableBodiesFeature());
+        registerFeature(new ProtocolFeature());
         registerFeature(new NaturalStructureSpawningFeature());
         registerFeature(new NaturalLaborEntitySpawningFeature());
         registerFeature(new RougelikeDungeonFeature());

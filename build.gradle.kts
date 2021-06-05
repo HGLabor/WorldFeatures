@@ -13,10 +13,12 @@ java.targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     jcenter()
+    mavenLocal()
     mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
+    maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 tasks {
@@ -43,4 +45,6 @@ dependencies {
     implementation("net.axay:BlueUtils:1.0.2")
     implementation("org.litote.kmongo:kmongo-core:4.2.3")
     implementation("org.litote.kmongo:kmongo-serialization-mapping:4.2.3")
+    compileOnly("org.bukkit","craftbukkit","1.16.5-R0.1-SNAPSHOT")
+    compileOnly("com.comphenix.protocol", "ProtocolLib", "4.6.0")
 }
