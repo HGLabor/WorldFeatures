@@ -13,6 +13,7 @@ java.targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     jcenter()
+    mavenLocal()
     mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://oss.sonatype.org/content/groups/public/")
@@ -38,6 +39,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly("net.luckperms:api:5.2")
+    compileOnly("org.bukkit","craftbukkit","1.16.5-R0.1-SNAPSHOT")
     implementation("net.axay:kspigot:1.16.28")
     implementation("de.hglabor:hglabor-utils:0.0.11")
     implementation("net.axay:BlueUtils:1.0.2")
