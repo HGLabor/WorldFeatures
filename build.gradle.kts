@@ -43,6 +43,7 @@ dependencies {
     compileOnly("org.bukkit","craftbukkit","1.16.5-R0.1-SNAPSHOT")
     implementation("net.axay:kspigot:1.16.28")
     implementation("de.hglabor:hglabor-utils:0.0.11")
+    compileOnly("net.axay:kspigot:1.17.1")
     implementation("net.axay:BlueUtils:1.0.2")
     implementation("org.litote.kmongo:kmongo-core:4.2.3")
     implementation("org.litote.kmongo:kmongo-serialization-mapping:4.2.3")
