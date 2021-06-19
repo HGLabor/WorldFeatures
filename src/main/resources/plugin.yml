@@ -1,7 +1,7 @@
 name: WorldFeatures
 version: 2.0.1
 main: de.hglabor.worldfeatures.WorldFeatures
-api-version: 1.16
+api-version: 1.17
 depend: ["LuckPerms", "spigot-language-kotlin"]
 libraries: ["net.axay:kspigot:1.17.1", "de.hglabor:hglabor-utils:0.0.11"]
 commands:
