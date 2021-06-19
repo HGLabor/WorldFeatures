@@ -442,8 +442,12 @@ public class TemperaturesFeature extends Feature {
     }
 
     public double getBiomeTemperature(Location location) {
-        BiomeBase biomeBase = ((CraftWorld) location.getWorld()).getHandle().getBiome(new BlockPosition(location.getBlockX(), location.getY(), location.getBlockZ()));
-        double biomeTemperature = biomeBase.getAdjustedTemperature(new BlockPosition(location.getBlockX(), location.getY(), location.getBlockZ()));
-        return biomeTemperature;
+        try {
+            BiomeBase biomeBase = ((CraftWorld) location.getWorld()).getHandle().getBiome(new BlockPosition(location.getBlockX(), location.getY(), location.getBlockZ()));
+            double biomeTemperature = biomeBase.getAdjustedTemperature(new BlockPosition(location.getBlockX(), location.getY(), location.getBlockZ()));
+            return biomeTemperature;
+        } catch (NoClassDefFoundError e) { //this happens when server updates to newer or older version
+            return 0.0;
+        }
     }
 }
