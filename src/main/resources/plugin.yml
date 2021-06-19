@@ -2,7 +2,7 @@ name: WorldFeatures
 version: 0.0.1
 main: de.hglabor.worldfeatures.WorldFeatures
 api-version: 1.16
-depend: ["LuckPerms", "spigot-language-kotlin", "AsyncWorldEdit"]
+depend: ["LuckPerms", "spigot-language-kotlin"]
 commands:
   feature:
     permission: hglabor.managefeatures

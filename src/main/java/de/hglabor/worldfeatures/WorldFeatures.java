@@ -62,14 +62,14 @@ public final class WorldFeatures extends KSpigot {
         registerFeature(new LootDropFeature());
         registerFeature(new GasFeature());
         registerFeature(new IllegalItemsFeature());
-        //registerFeature(new SpawnProtFeature());
+        registerFeature(new SpawnProtFeature());
         registerFeature(new ContributorFeature());
         registerFeature(new TeleporterFeature());
         registerFeature(new LootableBodiesFeature());
         registerFeature(new ProtocolFeature());
-        registerFeature(new NaturalStructureSpawningFeature());
+        //registerFeature(new NaturalStructureSpawningFeature());
         registerFeature(new NaturalLaborEntitySpawningFeature());
-        registerFeature(new RougelikeDungeonFeature());
+        //registerFeature(new RougelikeDungeonFeature());
         registerFeature(new RaptorEntityFeature());
         registerFeature(new BirdEntityFeature());
         for (Feature feature : getFeatures()) {

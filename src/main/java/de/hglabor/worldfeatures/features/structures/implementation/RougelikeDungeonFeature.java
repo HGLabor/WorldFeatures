@@ -13,7 +13,7 @@ import org.bukkit.World;
 public class RougelikeDungeonFeature extends Structure {
 
     public RougelikeDungeonFeature() {
-        super("RougelikeDungeon", it -> true);
+        super("RougelikeDungeon", it -> false, it -> {});
     }
 
 }
