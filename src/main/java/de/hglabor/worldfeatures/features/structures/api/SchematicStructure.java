@@ -18,9 +18,9 @@ public @interface SchematicStructure {
      * @return the spawnchance of the player
      */
 
-    int spawnChance();
+    int spawnChance() default 0;
 
-    int yCooridnate();
+    int yCooridnate() default 22;
 
     String schematicFile();
 

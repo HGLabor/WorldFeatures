@@ -37,7 +37,6 @@ public class NaturalStructureSpawningFeature extends Feature {
                             if(structure.canSpawnHere(chunk.getBlock(9, schematicStructure.yCooridnate(),9).getLocation()) && chunk.getWorld().getEnvironment() == schematicStructure.envrioment()) {
                                 if(BetterChanceUtils.rollRarely(schematicStructure.spawnChance())) {
                                     WorldEditUtils.pasteSchematic(chunk.getWorld(), chunk.getBlock(9, schematicStructure.yCooridnate(),9).getLocation(), new File(WorldFeatures.getPlugin().getDataFolder(), "/schematics/" + schematicStructure.schematicFile()));
-                                    Bukkit.broadcastMessage("PASTED AT " + chunk.getBlock(9, schematicStructure.yCooridnate(), 9).getLocation());
                                     structure.onGenerate().accept(chunk.getBlock(9, schematicStructure.yCooridnate(),9).getLocation());
                                     break;
                                 }
