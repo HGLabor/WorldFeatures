@@ -153,7 +153,7 @@ public class GasFeature extends Feature {
     public void onDeath(PlayerDeathEvent event) {
         for (Block block : getNearbyBlocks(event.getEntity().getLocation(), 4)) {
             if(block.hasMetadata("gas")) {
-                event.deathMessage(Component.text(event.getEntity().displayName() + " died of gas").style(Style.style(TextColor.fromHexString("#ffffff"))));
+                event.deathMessage(Component.text(event.getEntity().getDisplayName() + " died of gas").style(Style.style(TextColor.fromHexString("#ffffff"))));
                 break;
             }
         }

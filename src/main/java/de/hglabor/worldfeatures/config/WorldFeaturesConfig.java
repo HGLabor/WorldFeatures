@@ -6,11 +6,12 @@ import net.axay.kspigot.config.PluginFile;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 
 public class WorldFeaturesConfig {
 
     private static YamlConfiguration yamlConfiguration;
-    private static final File file = new PluginFile("featrues.yml", null);
+    private static final File file = new PluginFile("features.yml", null);
 
     public static void initialize() {
         yamlConfiguration = YamlConfiguration.loadConfiguration(file);
@@ -19,16 +20,28 @@ public class WorldFeaturesConfig {
             if(yamlConfiguration.getBoolean("features." + feature.getName() + ".isEnabled")) {
                 if(!feature.isEnabled()) {
                     feature.setEnabled(true);
-                } else {
+                }
+            } else {
+                if(feature.isEnabled()) {
                     feature.setEnabled(false);
                 }
             }
+        }
+        try {
+            yamlConfiguration.save(file);
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
 
     public static void finalizeConfig() {
         for (Feature feature : WorldFeatures.getFeatures()) {
-            yamlConfiguration.set("features." + feature.getName() + ".isEnabled", feature.isEnabled());
+            try {
+                yamlConfiguration.set("features." + feature.getName() + ".isEnabled", feature.isEnabled());
+                yamlConfiguration.save(file);
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
         }
     }
 

@@ -146,7 +146,7 @@ public class JetpackFeature extends Feature {
             if(hasFuel(player)) {
                 return;
             }
-            event.deathMessage(Component.text(player.displayName() + " crashed with its jetpack").style(Style.style(TextColor.fromHexString("#ffffff"))));
+            event.deathMessage(Component.text(player.getDisplayName() + " crashed with its jetpack").style(Style.style(TextColor.fromHexString("#ffffff"))));
         }
     }
 

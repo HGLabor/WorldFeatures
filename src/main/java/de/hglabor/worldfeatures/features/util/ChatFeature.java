@@ -85,8 +85,8 @@ public class ChatFeature extends Feature implements CommandExecutor, TabComplete
                     component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GRAY + "Reply to " + ChatColor.GOLD + player.getName())));
                     isPing = true;
                     if(!player.hasPermission("group.muted")) {
+                        p.playSound(p.getLocation(), Sound.BLOCK_BELL_USE, 0.3f, 1);
                         for (Player pl : Bukkit.getOnlinePlayers()) {
-                            pl.playSound(pl.getLocation(), Sound.BLOCK_BELL_USE, 0.3f, 1);
                             pl.spigot().sendMessage(component);
                         }
                     } else {
