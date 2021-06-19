@@ -44,6 +44,14 @@ public final class WorldFeatures extends KSpigot {
     }
 
     @Override
+    public void load() {
+        System.setProperty(
+                "org.litote.mongo.test.mapping.service",
+                "org.litote.kmongo.serialization.SerializationClassMappingTypeService"
+        );
+    }
+
+    @Override
     public void startup() {
         plugin = this;
         if(!getDataFolder().exists()) {
@@ -79,5 +87,9 @@ public final class WorldFeatures extends KSpigot {
         getCommand("feature").setTabCompleter(new FeatureCommand());
         getCommand("rules").setExecutor(new RulesCommand());
         new SpawnEntityCommand();
+    }
+    @Override
+    public void shutdown() {
+        MongoManager.INSTANCE.getMongoDB().close();
     }
 }

@@ -7,7 +7,7 @@ import net.axay.blueutils.database.mongodb.MongoDB
 
 object MongoManager {
 
-    val mongoDB = MongoDB(DatabaseLoginInformation(ConfigManager.dbHost, ConfigManager.dbPort, ConfigManager.dbDatabase, ConfigManager.dbUsername, ConfigManager.dbPassword), spigot = true)
+    val mongoDB = MongoDB(DatabaseLoginInformation(ConfigManager.dbHost, ConfigManager.dbPort, ConfigManager.dbDatabase, ConfigManager.dbUsername, ConfigManager.dbPassword))
 
     val BODIES = mongoDB.getCollectionOrCreate<LootableBody>("LOOTABLEBODIES_BODIES")
 
