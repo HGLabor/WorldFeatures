@@ -1,5 +1,6 @@
 package de.hglabor.worldfeatures.features.util;
 
+import com.destroystokyo.paper.ClientOption;
 import de.hglabor.worldfeatures.WorldFeatures;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.features.armor.GasFeature;
@@ -275,7 +276,7 @@ public class TemperaturesFeature extends Feature {
                                         Lightable lightable = (Lightable) block1.getBlockData();
                                         if(lightable.isLit())
                                             increaseTemperatureLevel(player, 0.7f, 10);
-                                    } else player.sendMessage("SCHeiß tag");
+                                    }
                                 }
                             }
                         }
@@ -323,7 +324,9 @@ public class TemperaturesFeature extends Feature {
                         loc.getWorld().strikeLightning(loc);
                         loc.getBlock().setType(Material.FIRE);
                     }
-
+                    if (getTemperatureLevel(player) < -7 && new Random().nextInt(10) < 5) {
+                        player.setFreezeTicks(getTemperatureLevel(player).intValue());
+                    }
                     if (getTemperatureLevel(player) < -17 && new Random().nextInt(10) < 9) {
                         player.damage(new Random().nextBoolean() ? 0.5 : 0.8);
                     }
@@ -362,7 +365,7 @@ public class TemperaturesFeature extends Feature {
                         player.getLocation().clone().add(-1, 0, 1).getBlock().setType(Material.BLUE_ICE);
                     }
                     if (getTemperatureLevel(player) < -48) {
-                        List<Material> ices = Arrays.asList(Material.ICE, Material.BLUE_ICE, Material.PACKED_ICE);
+                        List<Material> ices = Arrays.asList(Material.ICE, Material.BLUE_ICE, Material.PACKED_ICE, Material.POWDER_SNOW_CAULDRON, Material.POWDER_SNOW);
                         Location loc = player.getLocation();
                         player.damage(134023);
                         loc.getBlock().setType((Material) ices.toArray()[new Random().nextInt(ices.size())]);
@@ -398,7 +401,7 @@ public class TemperaturesFeature extends Feature {
         if (temperatureLevel >= -0.5 && temperatureLevel <= 0.5) {
             return ChatColor.of("#249ad5").toString() + finalTemperatureLevel; //blue fireoly
         } else if (temperatureLevel >= 0.5 && temperatureLevel <= 2.5) {
-            return ChatColor.BLACK.toString() + finalTemperatureLevel; //türkis blau  #22b5c7
+            return ChatColor.BLACK + finalTemperatureLevel; //türkis blau  #22b5c7
         } else if (temperatureLevel >= 2.5 && temperatureLevel <= 3.5) {
             return ChatColor.of("#23d9bb").toString() + finalTemperatureLevel; //türkis
         } else if (temperatureLevel >= 3.5 && temperatureLevel <= 5.5) {
@@ -420,7 +423,7 @@ public class TemperaturesFeature extends Feature {
         } else if (temperatureLevel >= 37.5 && temperatureLevel <= 45.5) {
             return ChatColor.of("#ee2811").toString() + finalTemperatureLevel; //red
         } else if (temperatureLevel >= 45.5) {
-            return ChatColor.DARK_RED.toString() + finalTemperatureLevel;
+            return ChatColor.DARK_RED + finalTemperatureLevel;
         } else if (temperatureLevel <= 0.5 && temperatureLevel >= -3) {
             return ChatColor.of("#0f68da").toString() + finalTemperatureLevel; //darker blue fireoly
         } else if (temperatureLevel <= -4 && temperatureLevel >= -9) {
@@ -437,7 +440,7 @@ public class TemperaturesFeature extends Feature {
             return ChatColor.of("#350c9b").toString() + finalTemperatureLevel; //dunkel violet
         } else if (temperatureLevel <= -46) {
             return ChatColor.of("#350c9b").toString() + finalTemperatureLevel; //sehr dunkel violet pink
-        } else return ChatColor.DARK_RED.toString() + finalTemperatureLevel;
+        } else return ChatColor.DARK_RED + finalTemperatureLevel;
     }
 
     public double getBiomeTemperature(Location location) {

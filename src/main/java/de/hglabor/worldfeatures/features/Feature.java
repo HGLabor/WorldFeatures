@@ -13,6 +13,11 @@ public abstract class Feature implements Listener {
         this.name = name;
     }
 
+    public Feature(String name, boolean isEnabled) {
+        this.isEnabled = isEnabled;
+        this.name = name;
+    }
+
     public boolean isEnabled() {
         return isEnabled;
     }

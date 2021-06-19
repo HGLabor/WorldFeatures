@@ -36,43 +36,6 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
     @Override
     public void onServerStart(Plugin plugin) {
         plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin, TELEPAD_CHANNEL, this);
-        /*
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        protocolManager.addPacketListener(new PacketAdapter(WorldFeatures.getPlugin(), ListenerPriority.NORMAL, PacketType.Play.Client.CUSTOM_PAYLOAD) {
-            @Override
-            public void onPacketReceiving(PacketEvent event) {
-                if(!isEnabled) {
-                    return;
-                }
-                PacketContainer packetContainer = event.getPacket();
-                PacketPlayInCustomPayload packet = (PacketPlayInCustomPayload) packetContainer.getHandle();
-                Player player = event.getPlayer();
-                if(packet.tag.toString().equalsIgnoreCase("hglabor:c2s_telepad_place")) {
-                    Location location = parseLocation(packet.data.toString());
-                    location.getBlock().setType(Material.END_PORTAL_FRAME);
-                    ItemStack itemStack = player.getInventory().getItemInMainHand();
-                    if(itemStack.getType() != Material.END_PORTAL_FRAME) {
-                        return;
-                    }
-                    event.setCancelled(true);
-                    ItemMeta meta = itemStack.getItemMeta();
-                    PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
-                    ArmorStand armorStand = location.getWorld().spawn(location.clone().subtract(0,1.5,0), ArmorStand.class);
-                    armorStand.setVisible(false);
-                    armorStand.setInvulnerable(true);
-                    for(EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
-                        armorStand.addEquipmentLock(equipmentSlot, ArmorStand.LockType.ADDING_OR_CHANGING);
-                        armorStand.addEquipmentLock(equipmentSlot, ArmorStand.LockType.REMOVING_OR_CHANGING);
-                    }
-                    armorStand.setCustomNameVisible(true);
-                    armorStand.setCustomName("Telepad Exit Route");
-                    dataContainer.set(KEY, PersistentDataType.STRING, locationToString(player.getLocation()));
-                    itemStack.setItemMeta(meta);
-                    location.getWorld().playSound(location, Sound.BLOCK_END_PORTAL_SPAWN,1.0f,1.0f);
-                }
-            }
-        });
-         */
     }
 
     private String locationToString(Location location) {
@@ -90,29 +53,29 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte[] message) {
-        if(!channel.equals(TELEPAD_CHANNEL)) {
+        if(channel.equals(TELEPAD_CHANNEL)) {
+            ClientPayloadBuffer payloadBuffer = new ClientPayloadBuffer(message);
+            Location location = parseLocation(payloadBuffer.readString());
+            location.getBlock().setType(Material.END_PORTAL_FRAME);
+            ItemStack itemStack = player.getInventory().getItemInMainHand();
+            if(itemStack.getType() != Material.END_PORTAL_FRAME) {
+                return;
+            }
+            ItemMeta meta = itemStack.getItemMeta();
+            PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+            ArmorStand armorStand = location.getWorld().spawn(location.clone().subtract(0,1.5,0), ArmorStand.class);
+            armorStand.setVisible(false);
+            armorStand.setInvulnerable(true);
+            for(EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
+                armorStand.addEquipmentLock(equipmentSlot, ArmorStand.LockType.ADDING_OR_CHANGING);
+                armorStand.addEquipmentLock(equipmentSlot, ArmorStand.LockType.REMOVING_OR_CHANGING);
+            }
+            armorStand.setCustomNameVisible(true);
+            armorStand.setCustomName("Telepad Exit Route");
+            dataContainer.set(KEY, PersistentDataType.STRING, locationToString(player.getLocation()));
+            itemStack.setItemMeta(meta);
+            location.getWorld().playSound(location, Sound.BLOCK_END_PORTAL_SPAWN,1.0f,1.0f);
             return;
         }
-        ClientPayloadBuffer payloadBuffer = new ClientPayloadBuffer(message);
-        Location location = parseLocation(payloadBuffer.readString());
-        location.getBlock().setType(Material.END_PORTAL_FRAME);
-        ItemStack itemStack = player.getInventory().getItemInMainHand();
-        if(itemStack.getType() != Material.END_PORTAL_FRAME) {
-            return;
-        }
-        ItemMeta meta = itemStack.getItemMeta();
-        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
-        ArmorStand armorStand = location.getWorld().spawn(location.clone().subtract(0,1.5,0), ArmorStand.class);
-        armorStand.setVisible(false);
-        armorStand.setInvulnerable(true);
-        for(EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
-            armorStand.addEquipmentLock(equipmentSlot, ArmorStand.LockType.ADDING_OR_CHANGING);
-            armorStand.addEquipmentLock(equipmentSlot, ArmorStand.LockType.REMOVING_OR_CHANGING);
-        }
-        armorStand.setCustomNameVisible(true);
-        armorStand.setCustomName("Telepad Exit Route");
-        dataContainer.set(KEY, PersistentDataType.STRING, locationToString(player.getLocation()));
-        itemStack.setItemMeta(meta);
-        location.getWorld().playSound(location, Sound.BLOCK_END_PORTAL_SPAWN,1.0f,1.0f);
     }
 }

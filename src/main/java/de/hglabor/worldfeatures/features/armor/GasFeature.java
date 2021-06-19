@@ -4,6 +4,8 @@ import de.hglabor.worldfeatures.WorldFeatures;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.utils.ItemBuilder;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -53,16 +55,15 @@ public class GasFeature extends Feature {
                                 Location location = block.getLocation().clone();
                                 location.setY(i);
                                 if(location.getBlock().getType() == Material.ANCIENT_DEBRIS || location.getBlock().getType() == Material.EMERALD_ORE) {
-                                    if(block.getBiome() == null) {
-                                        if(block.getWorld().getName().equalsIgnoreCase("world")) {
-                                            foundGas = true;
-                                        }
+                                    if(block.getWorld().getName().equalsIgnoreCase("world")) {
+                                        foundGas = true;
                                     }
                                 }
+
                             }
                             if(foundGas) {
                                 for (Block newBlock : getNearbyBlocks(block.getLocation(), 1)) {
-                                    block.setMetadata("gas", new FixedMetadataValue(WorldFeatures.getPlugin(), true));
+                                    newBlock.setMetadata("gas", new FixedMetadataValue(WorldFeatures.getPlugin(), true)); //does gas spread over the entire map?
                                 }
                             }
                         }
@@ -108,14 +109,14 @@ public class GasFeature extends Feature {
                                 }
                                 for (int i = -4; i < 13; i++) {
                                     if(new Random().nextDouble() > 0.30) {
-                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.GREEN, 2f));
+                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.GREEN, new Random().nextInt(3)));
                                     }
                                     if(new Random().nextDouble() == 1) {
-                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.GREEN, 2f));
-                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.OLIVE, 2f));
+                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.GREEN, new Random().nextInt(3)));
+                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.OLIVE, new Random().nextInt(3)));
                                     }
                                     if(new Random().nextDouble() > 0.60) {
-                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.OLIVE, 2f));
+                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.OLIVE, new Random().nextInt(3)));
                                     }
                                 }
                             }
@@ -152,7 +153,7 @@ public class GasFeature extends Feature {
     public void onDeath(PlayerDeathEvent event) {
         for (Block block : getNearbyBlocks(event.getEntity().getLocation(), 4)) {
             if(block.hasMetadata("gas")) {
-                event.setDeathMessage(event.getEntity().getDisplayName() + " §fdied of gas");
+                event.deathMessage(Component.text(event.getEntity().displayName() + " died of gas").style(Style.style(TextColor.fromHexString("#ffffff"))));
                 break;
             }
         }

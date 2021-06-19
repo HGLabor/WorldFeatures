@@ -3,6 +3,7 @@ package de.hglabor.worldfeatures;
 import de.hglabor.worldfeatures.commands.bukkit.FeatureCommand;
 import de.hglabor.worldfeatures.commands.bukkit.RulesCommand;
 import de.hglabor.worldfeatures.commands.implementation.SpawnEntityCommand;
+import de.hglabor.worldfeatures.config.WorldFeaturesConfig;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.features.armor.GasFeature;
 import de.hglabor.worldfeatures.features.armor.JetpackFeature;
@@ -17,6 +18,7 @@ import de.hglabor.worldfeatures.features.travel.DolphinRidingFeature;
 import de.hglabor.worldfeatures.features.travel.ParachuteFeature;
 import de.hglabor.worldfeatures.features.travel.TeleporterFeature;
 import de.hglabor.worldfeatures.features.util.*;
+import de.hglabor.worldfeatures.kotlin.data.MongoManager;
 import de.hglabor.worldfeatures.kotlin.features.LootableBodiesFeature;
 import net.axay.kspigot.main.KSpigot;
 import org.bukkit.Bukkit;
@@ -87,9 +89,12 @@ public final class WorldFeatures extends KSpigot {
         getCommand("feature").setTabCompleter(new FeatureCommand());
         getCommand("rules").setExecutor(new RulesCommand());
         new SpawnEntityCommand();
+        WorldFeaturesConfig.initialize();
     }
+
     @Override
     public void shutdown() {
         MongoManager.INSTANCE.getMongoDB().close();
+        WorldFeaturesConfig.finalizeConfig();
     }
 }

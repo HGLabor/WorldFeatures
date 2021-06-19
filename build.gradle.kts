@@ -15,7 +15,7 @@ repositories {
     jcenter()
     mavenLocal()
     mavenCentral()
-    maven("https://papermc.io/repo/repository/maven-public/")
+    //maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
     maven("https://repo.dmulloy2.net/repository/public/")
@@ -38,10 +38,10 @@ tasks {
 
 dependencies {
     compileOnly(kotlin("stdlib"))
-    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT")
     compileOnly("net.luckperms:api:5.2")
     compileOnly("org.bukkit","craftbukkit","1.16.5-R0.1-SNAPSHOT")
-    compileOnly("net.axay:kspigot:1.17.1")
+    implementation("net.axay:kspigot:1.17.1")
     compileOnly("de.hglabor:hglabor-utils:0.0.11")
     implementation("net.axay:BlueUtils:1.0.2")
     implementation("org.litote.kmongo:kmongo-core:4.2.3")

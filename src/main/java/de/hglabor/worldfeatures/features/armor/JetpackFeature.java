@@ -3,9 +3,14 @@ package de.hglabor.worldfeatures.features.armor;
 import de.hglabor.worldfeatures.WorldFeatures;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.utils.ItemBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -118,6 +123,30 @@ public class JetpackFeature extends Feature {
                     decreaseFuel(player);
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        if(player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FALL) {
+            ItemStack chestplate = player.getEquipment().getChestplate();
+            if(chestplate == null) {
+                return;
+            }
+            if(!chestplate.hasItemMeta()) {
+                return;
+            }
+            if(!chestplate.getItemMeta().hasCustomModelData()) {
+                return;
+            }
+            if(chestplate.getItemMeta().getCustomModelData() != 2) {
+                return;
+            }
+            if(hasFuel(player)) {
+                return;
+            }
+            event.deathMessage(Component.text(player.displayName() + " crashed with its jetpack").style(Style.style(TextColor.fromHexString("#ffffff"))));
         }
     }
 

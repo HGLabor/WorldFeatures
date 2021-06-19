@@ -17,7 +17,7 @@ import java.util.Random;
 public class BirdEntityFeature extends LaborEntity<ArmorStand> implements IAnimateable<ArmorStand> {
 
     public BirdEntityFeature() {
-        super(new Identifier("bird"), 15, it -> it.getWorld().getName().equalsIgnoreCase("world"));
+        super(new Identifier("bird"), 5, it -> it.getWorld().getName().equalsIgnoreCase("world"));
     }
 
     @Override

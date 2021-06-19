@@ -3,6 +3,7 @@ package de.hglabor.worldfeatures.features.util;
 import de.hglabor.worldfeatures.features.Feature;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class ContributorFeature extends Feature {
@@ -11,7 +12,7 @@ public class ContributorFeature extends Feature {
         super("ContributorStar");
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         if(!isEnabled) {
             return;

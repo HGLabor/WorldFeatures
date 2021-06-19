@@ -21,7 +21,11 @@ public class LootDropFeature extends Feature {
     }
 
     private static Location lootDropLocation = new Location(Bukkit.getWorld("world"), 0,250, 0);
-    private static Material[] lootDropLoot = {Material.DIAMOND_BLOCK, Material.ANCIENT_DEBRIS, Material.NETHER_BRICK, Material.GOLD_INGOT, Material.GOLDEN_APPLE, Material.NETHER_BRICK, Material.GOLD_INGOT, Material.SCUTE, Material.PRISMARINE_SHARD, Material.PRISMARINE_CRYSTALS, Material.NETHER_WART, Material.LAPIS_LAZULI, Material.LAPIS_LAZULI, Material.LAPIS_LAZULI, Material.IRON_NUGGET, Material.LAPIS_LAZULI, Material.GOLD_INGOT, Material.GOLD_INGOT, Material.ENCHANTED_GOLDEN_APPLE, Material.NETHERITE_SCRAP, Material.DIAMOND, Material.IRON_NUGGET, Material.OBSIDIAN, Material.ARROW, Material.SPECTRAL_ARROW, Material.TNT, Material.IRON_BLOCK, Material.GOLD_NUGGET, Material.BAKED_POTATO, Material.ROTTEN_FLESH};
+    private static Material[] lootDropLoot = {Material.DIAMOND_BLOCK, Material.ANCIENT_DEBRIS, Material.NETHER_BRICK, Material.GOLD_INGOT, Material.GOLDEN_APPLE, Material.NETHER_BRICK,
+            Material.GOLD_INGOT, Material.SCUTE, Material.PRISMARINE_SHARD, Material.PRISMARINE_CRYSTALS, Material.NETHER_WART, Material.LAPIS_LAZULI, Material.LAPIS_LAZULI, Material.LAPIS_LAZULI,
+            Material.IRON_NUGGET, Material.LAPIS_LAZULI, Material.GOLD_INGOT, Material.GOLD_INGOT, Material.ENCHANTED_GOLDEN_APPLE, Material.NETHERITE_SCRAP, Material.DIAMOND, Material.AMETHYST_SHARD,
+            Material.IRON_NUGGET, Material.OBSIDIAN, Material.ARROW, Material.SPECTRAL_ARROW, Material.TNT, Material.IRON_BLOCK, Material.GOLD_NUGGET, Material.BAKED_POTATO, Material.ROTTEN_FLESH,
+    Material.SPYGLASS};
 
     @Override
     public void onEnable() {
@@ -67,7 +71,7 @@ public class LootDropFeature extends Feature {
                     lootDropLocation.getBlock().setType(Material.CHEST);
                     Chest chest = (Chest) lootDropLocation.getBlock().getState();
                     Inventory inventory = chest.getBlockInventory();
-                    for (int i = 0; i < 18; i++) {
+                    for (int i = 0; i < 20; i++) {
                         int randomSlot = new Random().nextInt(inventory.getSize()-1);
                         inventory.setItem(randomSlot, new ItemStack(lootDropLoot[new Random().nextInt(lootDropLoot.length)], new Random().nextInt(5)));
                     }
