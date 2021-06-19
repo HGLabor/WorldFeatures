@@ -398,7 +398,6 @@ public class TemperaturesFeature extends Feature {
         if (temperatureLevel >= -0.5 && temperatureLevel <= 0.5) {
             return ChatColor.of("#249ad5").toString() + finalTemperatureLevel; //blue fireoly
         } else if (temperatureLevel >= 0.5 && temperatureLevel <= 2.5) {
-            player.sendMessage("fick");
             return ChatColor.BLACK.toString() + finalTemperatureLevel; //türkis blau  #22b5c7
         } else if (temperatureLevel >= 2.5 && temperatureLevel <= 3.5) {
             return ChatColor.of("#23d9bb").toString() + finalTemperatureLevel; //türkis
