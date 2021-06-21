@@ -144,10 +144,14 @@ public class TemperaturesFeature extends Feature {
     }
 
     @Override
-    public void onServerStart(Plugin plugin) {
+    public void onEnable() {
+        final Plugin plugin = WorldFeatures.getPlugin();
         new BukkitRunnable() {
             @Override
             public void run() {
+                if(!isEnabled()) {
+                    return;
+                }
                 for(Player player : Bukkit.getOnlinePlayers()) {
                     player.sendActionBar(Component.text(ChatColor.WHITE + "Temperature Level: " + colorTemperatureLevel(player)));
                 }
@@ -156,6 +160,9 @@ public class TemperaturesFeature extends Feature {
         new BukkitRunnable() {
             @Override
             public void run() {
+                if(!isEnabled()) {
+                    return;
+                }
                 for(Player player : Bukkit.getOnlinePlayers()) {
                     Block block = player.getLocation().getBlock();
                     Biome biome = player.getWorld().getBiome(block.getX(), block.getY(), block.getZ());
@@ -325,7 +332,7 @@ public class TemperaturesFeature extends Feature {
                         loc.getBlock().setType(Material.FIRE);
                     }
                     if (getTemperatureLevel(player) < -7 && new Random().nextInt(10) < 5) {
-                        player.setFreezeTicks(getTemperatureLevel(player).intValue());
+                        player.setFreezeTicks(60);
                     }
                     if (getTemperatureLevel(player) < -17 && new Random().nextInt(10) < 9) {
                         player.damage(new Random().nextBoolean() ? 0.5 : 0.8);
@@ -382,12 +389,12 @@ public class TemperaturesFeature extends Feature {
         if (getTemperatureLevel(event.getEntity()) > 10 && event.getEntity().getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
             List<String> hotDeathMessages = Arrays.asList("probably jumped into a volcano", "stayed in sunlight for too long", "had a heat stroke");
             int r = new Random().nextInt(hotDeathMessages.size());
-            event.setDeathMessage(event.getEntity().getDisplayName() + " §c" + hotDeathMessages.toArray()[r]);
+            event.setDeathMessage(event.getEntity().getDisplayName() + " §f" + hotDeathMessages.toArray()[r]);
         }
         if (getTemperatureLevel(event.getEntity()) < -10 && event.getEntity().getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
-            List<String> coldDeathMessages = Arrays.asList("took a cold shower", "died in ice", "had a cold adventure");
+            List<String> coldDeathMessages = Arrays.asList("took a cold shower", "died in ice", "had a cold adventure", "is frozen to a block of ice");
             int r = new Random().nextInt(coldDeathMessages.size());
-            event.setDeathMessage(event.getEntity().getDisplayName() + " §b" + coldDeathMessages.toArray()[r]);
+            event.setDeathMessage(event.getEntity().getDisplayName() + " §f" + coldDeathMessages.toArray()[r]);
         }
         setDefaultTemperatureLevel(event.getEntity());
     }
