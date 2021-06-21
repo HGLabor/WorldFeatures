@@ -161,7 +161,7 @@ public class TemperaturesFeature extends Feature {
                     Biome biome = player.getWorld().getBiome(block.getX(), block.getY(), block.getZ());
                     String blockName = player.getLocation().clone().subtract(0, 1, 0).getBlock().getType().name();
 
-                    if(player.getGameMode() == GameMode.CREATIVE)
+                    if(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR)
                         continue;
                     //biome
                     double biomeTemp = getBiomeTemperature(player.getLocation());
