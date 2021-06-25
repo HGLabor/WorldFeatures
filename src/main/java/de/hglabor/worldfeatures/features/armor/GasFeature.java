@@ -2,6 +2,7 @@ package de.hglabor.worldfeatures.features.armor;
 
 import de.hglabor.worldfeatures.WorldFeatures;
 import de.hglabor.worldfeatures.features.Feature;
+import de.hglabor.worldfeatures.features.protocol.ProtocolFeature;
 import de.hglabor.worldfeatures.utils.ItemBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
@@ -73,11 +74,12 @@ public class GasFeature extends Feature {
                                 count++;
                                 if(!hasGasMask(player)) {
                                     player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 30, 3, true,true));
-                                    player.damage(8);
+                                    player.damage(4);
                                 } else {
                                     if(!hasGasFilters(player)) {
-                                        player.damage(4);
+                                        player.damage(2);
                                         player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 30, 3, true,true));
+                                        player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 70, 0, true,true));
                                         player.sendActionBar(Component.text(ChatColor.WHITE + "No gasfilters found."));
                                     } else {
                                         if(new Random().nextInt(45) < 7) {
@@ -89,6 +91,7 @@ public class GasFeature extends Feature {
                                 }
                             }
                         }
+                        ProtocolFeature.sendGasUpdate(count, player);
                     }
                 }
             }
@@ -109,14 +112,14 @@ public class GasFeature extends Feature {
                                 }
                                 for (int i = -4; i < 13; i++) {
                                     if(new Random().nextDouble() > 0.30) {
-                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.GREEN, new Random().nextInt(3)));
+                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.GREEN, new Random().nextInt(4)));
                                     }
                                     if(new Random().nextDouble() == 1) {
-                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.GREEN, new Random().nextInt(3)));
-                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.OLIVE, new Random().nextInt(3)));
+                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.GREEN, new Random().nextInt(4)));
+                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.OLIVE, new Random().nextInt(4)));
                                     }
                                     if(new Random().nextDouble() > 0.60) {
-                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.OLIVE, new Random().nextInt(3)));
+                                        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().clone().add(0,i,0), 0, new Particle.DustOptions(Color.OLIVE, new Random().nextInt(5)));
                                     }
                                 }
                             }
