@@ -4,10 +4,11 @@ import com.destroystokyo.paper.ClientOption;
 import de.hglabor.worldfeatures.WorldFeatures;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.features.armor.GasFeature;
+import de.hglabor.worldfeatures.features.protocol.ProtocolFeature;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
-import net.minecraft.server.v1_16_R3.BiomeBase;
-import net.minecraft.server.v1_16_R3.BlockPosition;
+import net.minecraft.core.BlockPosition;
+import net.minecraft.world.level.biome.BiomeBase;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -16,7 +17,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Lightable;
 import org.bukkit.block.data.type.Furnace;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -300,6 +301,12 @@ public class TemperaturesFeature extends Feature {
                         }
                         //--------block
                     }
+                    float temperatureLevel = getTemperatureLevel(player);
+                    String finalTemperatureLevel = "0.0";
+                    if (temperatureLevel != 0) {
+                        finalTemperatureLevel = String.valueOf(temperatureLevel).split("\\.")[0] + "." + String.valueOf(temperatureLevel).split("\\.")[1].subSequence(0, 1);
+                    }
+                    ProtocolFeature.sendTemperatureUpdate(Double.parseDouble(finalTemperatureLevel), player, getColor(player));
 
                     if (getTemperatureLevel(player) > 17 && new Random().nextInt(18) < 17) {
                         player.damage(new Random().nextBoolean() ? 0.5 : 0.8);
@@ -448,6 +455,57 @@ public class TemperaturesFeature extends Feature {
         } else if (temperatureLevel <= -46) {
             return ChatColor.of("#350c9b").toString() + finalTemperatureLevel; //sehr dunkel violet pink
         } else return ChatColor.DARK_RED + finalTemperatureLevel;
+    }
+
+    private int getColor(Player player) {
+        float temperatureLevel = getTemperatureLevel(player);
+        String finalTemperatureLevel;
+        if (temperatureLevel != 0) {
+            finalTemperatureLevel = String.valueOf(temperatureLevel).split("\\.")[0] + "." + String.valueOf(temperatureLevel).split("\\.")[1].subSequence(0, 1);
+        } else finalTemperatureLevel = String.valueOf(0);
+        if (temperatureLevel >= -0.5 && temperatureLevel <= 0.5) {
+            return ChatColor.of("#249ad5").getColor().getRGB();
+        } else if (temperatureLevel >= 0.5 && temperatureLevel <= 2.5) {
+            return ChatColor.BLACK.getColor().getRGB();
+        } else if (temperatureLevel >= 2.5 && temperatureLevel <= 3.5) {
+            return ChatColor.of("#23d9bb").getColor().getRGB();
+        } else if (temperatureLevel >= 3.5 && temperatureLevel <= 5.5) {
+            return ChatColor.of("#25d07a").getColor().getRGB();
+        } else if (temperatureLevel >= 5.5 && temperatureLevel <= 7.5) {
+            return ChatColor.of("#33ca31").getColor().getRGB();
+        } else if (temperatureLevel >= 7.5 && temperatureLevel <= 9.5) {
+            return ChatColor.of("#60e42f").getColor().getRGB();
+        } else if (temperatureLevel >= 9.5 && temperatureLevel <= 12.5) {
+            return ChatColor.of("#a9de31").getColor().getRGB();
+        } else if (temperatureLevel >= 12.5 && temperatureLevel <= 16.5) {
+            return ChatColor.of("#ddee11").getColor().getRGB();
+        } else if (temperatureLevel >= 16.5 && temperatureLevel <= 23.5) {
+            return ChatColor.of("#eec911").getColor().getRGB();
+        } else if (temperatureLevel >= 23.5 && temperatureLevel <= 30.5) {
+            return ChatColor.of("#eec911").getColor().getRGB();
+        } else if (temperatureLevel >= 30.5 && temperatureLevel <= 37.5) {
+            return ChatColor.of("#ee5e11").getColor().getRGB();
+        } else if (temperatureLevel >= 37.5 && temperatureLevel <= 45.5) {
+            return ChatColor.of("#ee2811").getColor().getRGB();
+        } else if (temperatureLevel >= 45.5) {
+            return ChatColor.DARK_RED.getColor().getRGB();
+        } else if (temperatureLevel <= 0.5 && temperatureLevel >= -3) {
+            return ChatColor.of("#0f68da").getColor().getRGB();
+        } else if (temperatureLevel <= -4 && temperatureLevel >= -9) {
+            return ChatColor.of("#0f43da").getColor().getRGB();
+        } else if (temperatureLevel <= -10 && temperatureLevel >= -15) {
+            return ChatColor.of("#1339e4").getColor().getRGB();
+        } else if (temperatureLevel <= -16 && temperatureLevel >= -22) {
+            return ChatColor.of("#1013c2").getColor().getRGB();
+        } else if (temperatureLevel <= -23 && temperatureLevel >= -29) {
+            return ChatColor.of("#220da8").getColor().getRGB();
+        } else if (temperatureLevel <= -30 && temperatureLevel >= -37) {
+            return ChatColor.of("#350c9b").getColor().getRGB();
+        } else if (temperatureLevel <= -38 && temperatureLevel >= -45) {
+            return ChatColor.of("#350c9b").getColor().getRGB();
+        } else if (temperatureLevel <= -46) {
+            return ChatColor.of("#350c9b").getColor().getRGB();
+        } else return ChatColor.DARK_RED.getColor().getRGB();
     }
 
     public double getBiomeTemperature(Location location) {
