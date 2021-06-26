@@ -20,6 +20,7 @@ public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAni
 
     public RaptorEntityFeature() {
         super(new Identifier("raptor"), 4, it -> it.getWorld().getName().equalsIgnoreCase("world"));
+        makeShootable();
     }
 
     @Override

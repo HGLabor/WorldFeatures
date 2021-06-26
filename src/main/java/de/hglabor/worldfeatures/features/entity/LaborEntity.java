@@ -8,6 +8,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.function.Consumer;
@@ -51,6 +54,18 @@ public abstract class LaborEntity<T extends Entity> extends Feature {
         this.originBukkitEntityClass = ArmorStand.class;
     }
 
+    protected void makeShootable() {
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onDeath(ProjectileHitEvent event) {
+                Entity hitEntity = event.getHitEntity();
+                if(hitEntity.getScoreboardTags().contains(identifier.toString())) {
+                    hitEntity.remove();
+                }
+            }
+        }, WorldFeatures.getPlugin());
+    }
+
     public void withYOffset(double offset) {
         this.ySpawnOffset = offset;
     }
@@ -92,6 +107,7 @@ public abstract class LaborEntity<T extends Entity> extends Feature {
     @SuppressWarnings("unchecked")
     public void spawn(Class<? extends Entity> origin, Location location, int tickDelta) {
         originEntity = Bukkit.getWorld("world").spawn(location.clone().add(0,ySpawnOffset,0), origin);
+        originEntity.addScoreboardTag(identifier.toString());
         if(this instanceof IAnimateable<?>) {
             IAnimateable<T> iAnimateable = (IAnimateable<T>) this;
             new BukkitRunnable() {
