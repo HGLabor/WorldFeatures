@@ -35,8 +35,8 @@ public class LootDropFeature extends Feature {
                 if(!isEnabled) {
                     cancel();
                 } else {
-                    lootDropLocation.setX(new Random().nextInt(100000)-new Random().nextInt(100000));
-                    lootDropLocation.setZ(new Random().nextInt(100000)-new Random().nextInt(100000));
+                    lootDropLocation.setX(new Random().nextInt(10000)-new Random().nextInt(10000));
+                    lootDropLocation.setZ(new Random().nextInt(10000)-new Random().nextInt(10000));
                     spawnLootDrop();
                 }
             }
