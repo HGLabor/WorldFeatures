@@ -6,10 +6,12 @@ import de.hglabor.worldfeatures.utils.ClientPayloadBuffer;
 import de.hglabor.worldfeatures.utils.NMSUtils;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.ChatColor;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.game.PacketPlayOutCustomPayload;
 import net.minecraft.resources.MinecraftKey;
 import org.bukkit.*;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +26,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -45,6 +48,22 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
     @Override
     public void onServerStart(Plugin plugin) {
         plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin, TELEPAD_CHANNEL, this);
+    }
+
+    @Override
+    public void onEnable() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(!isEnabled()) {
+                    cancel();
+                    return;
+                }
+                for (Player player : players) {
+                    player.sendMessage(Component.text(":IGNORE:tps;" + format(Bukkit.getTPS()[0])));
+                }
+            }
+        }.runTaskTimer(WorldFeatures.getPlugin(), 0, 20);
     }
 
     private String locationToString(Location location) {
@@ -80,6 +99,21 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
                 player.sendMessage(Component.text(":IGNORE:temperature;" + level));
             }
             sendTemperatureColor(player, decimalColor);
+            /*
+            ClientPayloadBuffer clientPayloadBuffer = new ClientPayloadBuffer();
+            clientPayloadBuffer.writeString(level + "");
+            PacketPlayOutCustomPayload payloadPacket = new PacketPlayOutCustomPayload(new MinecraftKey("hglabor:s2c_temperature"), new PacketDataSerializer(clientPayloadBuffer.getByteBuf()));
+            NMSUtils.sendPacket(player, payloadPacket);
+            sendTemperatureColor(player, decimalColor);
+             */
+        }
+    }
+
+    public static void sendRadiation(double level, Player player) {
+        if(WorldFeatures.getFeatures().stream().filter(it -> it.getName().equalsIgnoreCase("Protocol")).findFirst().get().isEnabled()) {
+            if(players.contains(player)) {
+                player.sendMessage(Component.text(":IGNORE:radiation;" + level));
+            }
             /*
             ClientPayloadBuffer clientPayloadBuffer = new ClientPayloadBuffer();
             clientPayloadBuffer.writeString(level + "");
@@ -154,5 +188,9 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
             location.getWorld().playSound(location, Sound.BLOCK_END_PORTAL_SPAWN,1.0f,1.0f);
             return;
         }
+    }
+
+    private static String format(double tps) {
+        return ( ( tps > 21.0 ) ? "*" : "" ) + Math.min( Math.round( tps * 100.0 ) / 100.0, 20.0 );
     }
 }
