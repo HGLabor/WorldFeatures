@@ -12,11 +12,14 @@ import java.util.Random;
 
 public class BroadcastFeature extends Feature {
 
-    private static String[] tips = {"You can ride §bdolphins §7with saddles!", "Change your fontcolor with §b/color <color>§7.", "If your message starts with §b';'§7, you can copy it!", "You can ping users in the chat just by typing their name.", "Questions? §bhttps://discord.gg/CnSkATfpbA", "This server is §banarchy §7so feel free to do what you want", "Need help with extra features? §bhttps://github.com/HGLabor/survival-tutorial"};
+    private static String[] tips = {"You can ride §bdolphins §7with saddles!", "Change your fontcolor with §b/color <color>§7.", "If your message starts with §b';'§7, you can copy it!", "You can ping users in the chat just by typing their name.", "Questions? §bhttps://discord.gg/CnSkATfpbA", "Need help with extra features? §bhttps://github.com/HGLabor/survival-tutorial"};
 
     public BroadcastFeature() {
         super("Broadcast");
     }
+
+    private int tickRate = 0;
+    private String currentTip = tips[new Random().nextInt(tips.length)];
 
     @Override
     public void onEnable() {
@@ -34,13 +37,18 @@ public class BroadcastFeature extends Feature {
             @Override
             public void run() {
                 if(isEnabled) {
+                    tickRate++;
+                    if(tickRate == 40) {
+                        currentTip = tips[new Random().nextInt(tips.length)];
+                        tickRate = 0;
+                    }
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        player.setPlayerListHeaderFooter("§a\n§b§lHG§f§lLabor.de\n§a\n§b!discord §8| §b/rules §8| §b/tps §8| §b/wiki\n§a", "\n§3§lSurvival Server\n§3" + Bukkit.getOnlinePlayers().size() + "§7 Spieler online\n§a\n§a\n§8§l> §7§o" + tips[new Random().nextInt(tips.length)]);
+                        player.setPlayerListHeaderFooter("§a\n§b§lHG§f§lLabor.de\n§a\n§b!discord §8| §b/rules §8| §b/tps §8| §b/wiki\n§a", "\n§3§lSurvival Server\n§3" + Bukkit.getOnlinePlayers().size() + "§7 Spieler online\n§a\n§a\n§8§l> §7§o" + currentTip);
                     }
                 } else {
                     cancel();
                 }
             }
-        }.runTaskTimer(WorldFeatures.getPlugin(), 0, 40);
+        }.runTaskTimer(WorldFeatures.getPlugin(), 0, 1);
     }
 }

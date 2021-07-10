@@ -1,12 +1,20 @@
 package de.hglabor.worldfeatures.features.util;
 
+import de.hglabor.worldfeatures.WorldFeatures;
 import de.hglabor.worldfeatures.features.Feature;
+import de.hglabor.worldfeatures.utils.ItemBuilder;
 import de.hglabor.worldfeatures.utils.LuckPermsUtils;
+import de.hglabor.worldfeatures.utils.gui.GuiBuilder;
+import de.hglabor.worldfeatures.utils.gui.button.GuiButton;
 import net.axay.kspigot.chat.KColors;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,13 +26,10 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.awt.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.UUID;
 
 public class ChatFeature extends Feature implements CommandExecutor, TabCompleter {
 
@@ -54,6 +59,38 @@ public class ChatFeature extends Feature implements CommandExecutor, TabComplete
                 event.setCancelled(true);
                 return;
             }
+        }
+        if(!player.getScoreboardTags().contains("iq-test:yes")) {
+            event.setCancelled(true);
+            Question question = Question.values()[new Random().nextInt(Question.values().length)];
+            GuiBuilder guiBuilder = new GuiBuilder(WorldFeatures.getPlugin());
+            guiBuilder.withSlots(45);
+            guiBuilder.withName(ChatColor.BLACK + "CAPTCHA (" + player.getName().toUpperCase() + ")");
+            for (int i = 0; i < 45; i++) {
+                guiBuilder.withItem(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build(), i);
+            }
+            guiBuilder.withItem(new ItemBuilder(Material.PAPER).setName(question.question).build(), 13);
+            int start = 29;
+            for (String possibleAnswer : question.possibleAnswers) {
+                guiBuilder.withButton(start, new GuiButton(
+                        ChatColor.WHITE + possibleAnswer,
+                        ChatColor.GRAY.toString() + ChatColor.ITALIC + possibleAnswer,
+                        Material.DIAMOND,
+                        onClick -> {
+                            if(question.rightAnswer.equals(possibleAnswer)) {
+                                player.addScoreboardTag("iq-test:yes");
+                                player.closeInventory();
+                                player.sendMessage(Component.text("You finished the captcha.").color(TextColor.color(0, 255, 0)));
+                            } else {
+                                player.closeInventory();
+                                player.kick(Component.text("Captcha failed").color(TextColor.color(255, 0, 0)));
+                            }
+                        }
+                ));
+                start+=2;
+            }
+            player.openInventory(guiBuilder.build());
+            return;
         }
         if(event.getMessage().equalsIgnoreCase("!discord")) {
             event.setCancelled(true);
@@ -85,8 +122,8 @@ public class ChatFeature extends Feature implements CommandExecutor, TabComplete
                     component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GRAY + "Reply to " + ChatColor.GOLD + player.getName())));
                     isPing = true;
                     if(!player.hasPermission("group.muted")) {
+                        p.playSound(p.getLocation(), Sound.BLOCK_BELL_USE, 0.3f, 1);
                         for (Player pl : Bukkit.getOnlinePlayers()) {
-                            pl.playSound(pl.getLocation(), Sound.BLOCK_BELL_USE, 0.3f, 1);
                             pl.spigot().sendMessage(component);
                         }
                     } else {
@@ -155,6 +192,26 @@ public class ChatFeature extends Feature implements CommandExecutor, TabComplete
     public void onServerStart(Plugin plugin) {
         Bukkit.getPluginCommand("color").setExecutor(this);
         Bukkit.getPluginCommand("color").setTabCompleter(this);
+    }
+
+    public enum Question {
+
+        MEXICO_CITY("Was ist die Hauptstadt von Mexico?", "Mexico City","Brigadier", "Sydney", "Mexico City"),
+        MATH_1("Was ergibt 3*(2+4)?", "18", "24", "18", "10"),
+        GRIEFING("Darf man Griefen?", "Nein", "Ja", "Nein"),
+        CHEATING("Darf man Cheaten?", "Nein", "Nein", "Ja", "Ja aber kein X-Ray"),
+        NEW_ZEA_LAND("Zu welchem Kontinent gehört Neuseeland?", "Ozeanien", "Amerika", "Australien", "Ozeanien");
+
+        String[] possibleAnswers;
+        String rightAnswer;
+        String question;
+
+        Question(String question, String rightAnswer, String... possibleAnswers) {
+            this.question = question;
+            this.possibleAnswers = possibleAnswers;
+            this.rightAnswer = rightAnswer;
+        }
+
     }
 
 }

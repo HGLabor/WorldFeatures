@@ -6,6 +6,9 @@ import de.hglabor.worldfeatures.commands.api.CommandCompleter;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.features.entity.LaborEntity;
 import de.hglabor.worldfeatures.utils.Identifier;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -47,6 +50,8 @@ public class SpawnEntityCommand extends AbstractCommand {
                         }
                     }
                 }
+            } else {
+                sender.sendMessage(Component.text("Entity or origin class missing.").style(Style.style(TextColor.color(255, 0, 0))));
             }
         }
     }

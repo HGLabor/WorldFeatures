@@ -5,9 +5,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class GuiButtonClickAction {
 
-    private Player player;
-    private GuiButton button;
-    private InventoryClickEvent bukkitEvent;
+    private final InventoryClickEvent bukkitEvent;
+    private final Player player;
+    private final GuiButton button;
 
     public GuiButtonClickAction(Player player, GuiButton button, InventoryClickEvent bukkitEvent) {
         this.player = player;

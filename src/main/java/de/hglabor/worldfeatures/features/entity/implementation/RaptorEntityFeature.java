@@ -19,7 +19,8 @@ import java.util.Random;
 public class RaptorEntityFeature extends LaborEntity<ArmorStand> implements IAnimateable<ArmorStand> {
 
     public RaptorEntityFeature() {
-        super(new Identifier("raptor"), 10, it -> it.getWorld().getName().equalsIgnoreCase("world"));
+        super(new Identifier("raptor"), 4, it -> it.getWorld().getName().equalsIgnoreCase("world"));
+        makeShootable();
     }
 
     @Override

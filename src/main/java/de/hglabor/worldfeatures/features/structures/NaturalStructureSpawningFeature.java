@@ -34,10 +34,14 @@ public class NaturalStructureSpawningFeature extends Feature {
                         Class<? extends Structure> clazz = structure.getClass();
                         SchematicStructure schematicStructure = clazz.getAnnotation(SchematicStructure.class);
                         if(schematicStructure != null) {
-                            if(structure.canSpawnHere(chunk.getBlock(9, schematicStructure.yCooridnate(),9).getLocation()) && chunk.getWorld().getEnvironment() == schematicStructure.envrioment()) {
+                            int y = (schematicStructure.yCooridnate() == Integer.MAX_VALUE) ? chunk.getWorld().getHighestBlockYAt(chunk.getBlock(9, schematicStructure.yCooridnate(),9).getLocation())+1 : schematicStructure.yCooridnate();
+                            if(structure.canSpawnHere(chunk.getBlock(9, y,9).getLocation()) && chunk.getWorld().getEnvironment() == schematicStructure.envrioment()) {
                                 if(BetterChanceUtils.rollRarely(schematicStructure.spawnChance())) {
-                                    WorldEditUtils.pasteSchematic(chunk.getWorld(), chunk.getBlock(9, schematicStructure.yCooridnate(),9).getLocation(), new File(WorldFeatures.getPlugin().getDataFolder(), "/schematics/" + schematicStructure.schematicFile()));
-                                    structure.onGenerate().accept(chunk.getBlock(9, schematicStructure.yCooridnate(),9).getLocation());
+                                    WorldEditUtils.pasteSchematic(chunk.getWorld(), chunk.getBlock(9, y,9).getLocation(), new File(WorldFeatures.getPlugin().getDataFolder(), "/schematics/" + schematicStructure.schematicFile()));
+                                    structure.onGenerate().accept(chunk.getBlock(9, y,9).getLocation());
+                                    int x = chunk.getBlock(9, y,9).getLocation().getBlockX();
+                                    int z = chunk.getBlock(9, y,9).getLocation().getBlockZ();
+                                    logger.info("Generated " + structure.getName() + " at " + x + " " + y + " " + z);
                                     break;
                                 }
                             }

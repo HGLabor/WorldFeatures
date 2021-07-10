@@ -3,6 +3,7 @@ package de.hglabor.worldfeatures;
 import de.hglabor.worldfeatures.commands.bukkit.FeatureCommand;
 import de.hglabor.worldfeatures.commands.bukkit.RulesCommand;
 import de.hglabor.worldfeatures.commands.implementation.SpawnEntityCommand;
+import de.hglabor.worldfeatures.config.WorldFeaturesConfig;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.features.armor.GasFeature;
 import de.hglabor.worldfeatures.features.armor.JetpackFeature;
@@ -17,6 +18,7 @@ import de.hglabor.worldfeatures.features.travel.DolphinRidingFeature;
 import de.hglabor.worldfeatures.features.travel.ParachuteFeature;
 import de.hglabor.worldfeatures.features.travel.TeleporterFeature;
 import de.hglabor.worldfeatures.features.util.*;
+import de.hglabor.worldfeatures.kotlin.data.MongoManager;
 import de.hglabor.worldfeatures.kotlin.features.LootableBodiesFeature;
 import net.axay.kspigot.main.KSpigot;
 import org.bukkit.Bukkit;
@@ -44,6 +46,14 @@ public final class WorldFeatures extends KSpigot {
     }
 
     @Override
+    public void load() {
+        System.setProperty(
+                "org.litote.mongo.test.mapping.service",
+                "org.litote.kmongo.serialization.SerializationClassMappingTypeService"
+        );
+    }
+
+    @Override
     public void startup() {
         plugin = this;
         if(!getDataFolder().exists()) {
@@ -62,14 +72,14 @@ public final class WorldFeatures extends KSpigot {
         registerFeature(new LootDropFeature());
         registerFeature(new GasFeature());
         registerFeature(new IllegalItemsFeature());
-        //registerFeature(new SpawnProtFeature());
+        registerFeature(new SpawnProtFeature());
         registerFeature(new ContributorFeature());
         registerFeature(new TeleporterFeature());
         registerFeature(new LootableBodiesFeature());
         registerFeature(new ProtocolFeature());
-        registerFeature(new NaturalStructureSpawningFeature());
+        //registerFeature(new NaturalStructureSpawningFeature());
         registerFeature(new NaturalLaborEntitySpawningFeature());
-        registerFeature(new RougelikeDungeonFeature());
+        //registerFeature(new RougelikeDungeonFeature());
         registerFeature(new RaptorEntityFeature());
         registerFeature(new BirdEntityFeature());
         for (Feature feature : getFeatures()) {
@@ -79,5 +89,12 @@ public final class WorldFeatures extends KSpigot {
         getCommand("feature").setTabCompleter(new FeatureCommand());
         getCommand("rules").setExecutor(new RulesCommand());
         new SpawnEntityCommand();
+        WorldFeaturesConfig.initialize();
+    }
+
+    @Override
+    public void shutdown() {
+        MongoManager.INSTANCE.getMongoDB().close();
+        WorldFeaturesConfig.finalizeConfig();
     }
 }
