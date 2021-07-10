@@ -3,23 +3,18 @@ package de.hglabor.worldfeatures.features.protocol;
 import de.hglabor.worldfeatures.WorldFeatures;
 import de.hglabor.worldfeatures.features.Feature;
 import de.hglabor.worldfeatures.utils.ClientPayloadBuffer;
-import de.hglabor.worldfeatures.utils.NMSUtils;
-import io.papermc.paper.event.player.AsyncChatEvent;
+import de.hglabor.worldfeatures.utils.JsonUtils;
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.ChatColor;
-import net.minecraft.network.PacketDataSerializer;
-import net.minecraft.network.protocol.game.PacketPlayOutCustomPayload;
-import net.minecraft.resources.MinecraftKey;
 import org.bukkit.*;
-import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -30,6 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ProtocolFeature extends Feature implements PluginMessageListener {
@@ -38,6 +34,11 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
 
     private static final String HANDSHAKE = "hglabor:c2s_handshake";
     private static final String TELEPAD_CHANNEL = "hglabor:c2s_telepad_place";
+    private static final String OPEN_MAGIC_TABLE = "hglaborsurvival:c2s_open_magic_table";
+    private static final String ABORT_ENCHANT = "hglaborsurvival:c2s_abort_enchant";
+    private static final String OK_ENCHANT = "hglaborsurvival:c2s_ok_enchant";
+
+    private final static List<Player> playersEnchanting = new ArrayList<>();
 
     public ProtocolFeature() {
         super("Protocol");
@@ -48,6 +49,9 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
     @Override
     public void onServerStart(Plugin plugin) {
         plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin, TELEPAD_CHANNEL, this);
+        plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin, OPEN_MAGIC_TABLE, this);
+        plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin, ABORT_ENCHANT, this);
+        plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin, OK_ENCHANT, this);
     }
 
     @Override
@@ -84,12 +88,6 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
             if(players.contains(player)) {
                 player.sendMessage(Component.text(":IGNORE:gas;" + filtering));
             }
-            /*
-            ClientPayloadBuffer clientPayloadBuffer = new ClientPayloadBuffer();
-            clientPayloadBuffer.writeString(filtering + "");
-            PacketPlayOutCustomPayload payloadPacket = new PacketPlayOutCustomPayload(new MinecraftKey("hglabor:s2c_gas"), new PacketDataSerializer(clientPayloadBuffer.getByteBuf()));
-            NMSUtils.sendPacket(player, payloadPacket);
-             */
         }
     }
 
@@ -99,13 +97,6 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
                 player.sendMessage(Component.text(":IGNORE:temperature;" + level));
             }
             sendTemperatureColor(player, decimalColor);
-            /*
-            ClientPayloadBuffer clientPayloadBuffer = new ClientPayloadBuffer();
-            clientPayloadBuffer.writeString(level + "");
-            PacketPlayOutCustomPayload payloadPacket = new PacketPlayOutCustomPayload(new MinecraftKey("hglabor:s2c_temperature"), new PacketDataSerializer(clientPayloadBuffer.getByteBuf()));
-            NMSUtils.sendPacket(player, payloadPacket);
-            sendTemperatureColor(player, decimalColor);
-             */
         }
     }
 
@@ -114,13 +105,6 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
             if(players.contains(player)) {
                 player.sendMessage(Component.text(":IGNORE:radiation;" + level));
             }
-            /*
-            ClientPayloadBuffer clientPayloadBuffer = new ClientPayloadBuffer();
-            clientPayloadBuffer.writeString(level + "");
-            PacketPlayOutCustomPayload payloadPacket = new PacketPlayOutCustomPayload(new MinecraftKey("hglabor:s2c_temperature"), new PacketDataSerializer(clientPayloadBuffer.getByteBuf()));
-            NMSUtils.sendPacket(player, payloadPacket);
-            sendTemperatureColor(player, decimalColor);
-             */
         }
     }
 
@@ -128,12 +112,6 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
         if(players.contains(player)) {
             player.sendMessage(Component.text(":IGNORE:temperatureColor;" + decimalColor));
         }
-        /*
-        ClientPayloadBuffer clientPayloadBuffer = new ClientPayloadBuffer();
-        clientPayloadBuffer.writeString(decimalColor + "");
-        PacketPlayOutCustomPayload payloadPacket = new PacketPlayOutCustomPayload(new MinecraftKey("hglabor:s2c_temperature_color"), new PacketDataSerializer(clientPayloadBuffer.getByteBuf()));
-        NMSUtils.sendPacket(player, payloadPacket);
-         */
     }
 
     @EventHandler
@@ -164,6 +142,34 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
         if(channel.equals(HANDSHAKE)) {
             players.add(player);
         }
+        if(channel.equals(OPEN_MAGIC_TABLE)) {
+            playersEnchanting.add(player);
+        }
+        if(channel.equals(ABORT_ENCHANT)) {
+            playersEnchanting.remove(player);
+        }
+        if(channel.equals(OK_ENCHANT)) {
+            ClientPayloadBuffer payloadBuffer = new ClientPayloadBuffer(message);
+            EnchantRequest enchantRequest = JsonUtils.fromJson(JsonUtils.fromString(payloadBuffer.readString()), EnchantRequest.class);
+            ItemStack itemStack = player.getInventory().getItemInMainHand();
+            if(itemStack.getType().isAir()) {
+                return;
+            }
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemMeta.displayName(Component.text(enchantRequest.getNewName()));
+            for (String enchantment : enchantRequest.getEnchantments().keySet()) {
+                Enchantment ench = Enchantment.getByName(enchantment);
+                if(ench != null) {
+                    itemMeta.addEnchant(ench, enchantRequest.getEnchantments().get(enchantment),true);
+                }
+            }
+            for (String modifier : enchantRequest.getModifiers()) {
+                itemMeta.addItemFlags(ItemFlag.valueOf(modifier.toUpperCase()));
+            }
+            itemStack.setItemMeta(itemMeta);
+            playersEnchanting.remove(player);
+            player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 10, 1);
+        }
         if(channel.equals(TELEPAD_CHANNEL)) {
             ClientPayloadBuffer payloadBuffer = new ClientPayloadBuffer(message);
             Location location = parseLocation(payloadBuffer.readString());
@@ -192,5 +198,38 @@ public class ProtocolFeature extends Feature implements PluginMessageListener {
 
     private static String format(double tps) {
         return ( ( tps > 21.0 ) ? "*" : "" ) + Math.min( Math.round( tps * 100.0 ) / 100.0, 20.0 );
+    }
+
+    public static class EnchantRequest {
+
+        private final String newName;
+        private final HashMap<String, Integer> enchantments;
+        private final List<String> modifiers;
+
+        public EnchantRequest(String newName) {
+            this.newName = newName;
+            this.enchantments = new HashMap<>();
+            this.modifiers = new ArrayList<>();
+        }
+
+        public void addEnchantment(String enchantment, int level) {
+            this.enchantments.put(enchantment, level);
+        }
+
+        public void addModifier(String modifier) {
+            this.modifiers.add(modifier);
+        }
+
+        public String getNewName() {
+            return newName;
+        }
+
+        public HashMap<String, Integer> getEnchantments() {
+            return enchantments;
+        }
+
+        public List<String> getModifiers() {
+            return modifiers;
+        }
     }
 }
