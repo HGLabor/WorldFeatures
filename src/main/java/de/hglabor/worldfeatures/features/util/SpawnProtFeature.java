@@ -21,7 +21,7 @@ public class SpawnProtFeature extends Feature {
         super("SpawnProtection");
     }
 
-    public static final Cuboid SPAWN = new Cuboid(Worlds.OVERWORLD, -25, 140, -23, 24, 240, 9);
+    public static final Cuboid SPAWN = new Cuboid(Worlds.OVERWORLD, -25, 140, -23, 24, 240, 23);
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
@@ -38,7 +38,7 @@ public class SpawnProtFeature extends Feature {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if(!isEnabled()) {
+        if(isEnabled()) {
             Block block = event.getBlock();
             if(SPAWN.contains(block.getLocation())) {
                 event.setCancelled(true);
@@ -48,7 +48,7 @@ public class SpawnProtFeature extends Feature {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if(!isEnabled()) {
+        if(isEnabled()) {
             Block block = event.getBlock();
             if(SPAWN.contains(block.getLocation())) {
                 event.setCancelled(true);
@@ -58,7 +58,7 @@ public class SpawnProtFeature extends Feature {
 
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent event) {
-        if(!isEnabled()) {
+        if(isEnabled()) {
             Entity entity = event.getEntity();
             if(SPAWN.contains(entity.getLocation())) {
                 event.setCancelled(true);
@@ -68,7 +68,7 @@ public class SpawnProtFeature extends Feature {
 
     @EventHandler
     public void onExplode(EntityExplodeEvent event) {
-        if(!isEnabled()) {
+        if(isEnabled()) {
             Entity entity = event.getEntity();
             if(SPAWN.contains(entity.getLocation())) {
                 event.setCancelled(true);
