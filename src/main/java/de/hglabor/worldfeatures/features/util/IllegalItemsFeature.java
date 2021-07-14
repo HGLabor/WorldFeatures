@@ -26,6 +26,8 @@ public class IllegalItemsFeature extends Feature {
                     }
                 }
             }
+            //This is basiclly useless
+            /*
             for(ItemStack itemStack : player.getEnderChest().getContents()) {
                 if(itemStack != null) {
                     if(isIllegalItem(itemStack)) {
@@ -33,6 +35,7 @@ public class IllegalItemsFeature extends Feature {
                     }
                 }
             }
+             */
         }
     }
 
