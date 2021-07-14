@@ -29,7 +29,7 @@ public class SpawnProtFeature extends Feature {
     }
 
     public static final Cuboid SPAWN = new Cuboid(Worlds.OVERWORLD, -25, 140, -23, 24, 240, 23);
-    public static final Cuboid GREATER_SPAWN_REGION = new Cuboid(Worlds.OVERWORLD, -40, 140, -40, 40, 240, 40);
+    public static final Cuboid GREATER_SPAWN_REGION = new Cuboid(Worlds.OVERWORLD, -100, 140, -100, 100, 240, 100);
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
